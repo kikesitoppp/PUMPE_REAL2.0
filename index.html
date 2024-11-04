@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -71,13 +71,13 @@
             height: 40px;
             font-size: 1.5rem;
             cursor: pointer;
-            z-index: 3;
+            display: none;
         }
         .nav-button.left {
-            left: 10px; /* Más cerca del marco */
+            left: 50px;
         }
         .nav-button.right {
-            right: 10px; /* Más cerca del marco */
+            right: 50px;
         }
         .play-button {
             padding: 15px 30px;
@@ -189,51 +189,66 @@
 
         function startGallery() {
             playButton.style.display = 'none';
+            backgroundAudio.volume = 0.5;
             backgroundAudio.play();
-            displayNextItem();
+            document.getElementById('displayContainer').style.display = 'block';
+            document.getElementById('prevButton').style.display = 'flex';
+            document.getElementById('nextButton').style.display = 'flex';
+            showContent(currentIndex);
         }
 
-        function displayNextItem() {
-            if (currentIndex >= content.length) {
-                currentIndex = 0; // Reiniciar la galería
+        function showContent(index) {
+            displayImage.style.display = 'none';
+            displayVideo.style.display = 'none';
+            displayVideo.pause();
+            caption.textContent = '';
+
+            if (index >= content.length) {
+                playMessageButton.style.display = 'block';
+                return;
+            } else {
+                playMessageButton.style.display = 'none';
             }
 
-            const item = content[currentIndex];
+            const item = content[index];
+            caption.textContent = item.caption;
 
             if (item.type === 'image') {
-                displayVideo.style.display = 'none';
                 displayImage.src = item.src;
                 displayImage.style.display = 'block';
             } else if (item.type === 'video') {
-                displayImage.style.display = 'none';
                 displayVideo.src = item.src;
                 displayVideo.style.display = 'block';
                 displayVideo.play();
             }
-
-            caption.textContent = item.caption;
-            document.getElementById('displayContainer').style.display = 'block';
         }
 
-        function nextItem() {
-            currentIndex++;
-            displayNextItem();
+        function nextContent() {
+            currentIndex = (currentIndex + 1) % (content.length + 1);
+            showContent(currentIndex);
         }
 
-        function prevItem() {
-            currentIndex = (currentIndex > 0) ? currentIndex - 1 : content.length - 1;
-            displayNextItem();
+        function prevContent() {
+            currentIndex = (currentIndex - 1 + content.length + 1) % (content.length + 1);
+            showContent(currentIndex);
         }
 
         function playAudioMessage() {
+            backgroundAudio.volume = 0.0;
             const audioMessage = document.getElementById('audioMessage');
-            backgroundAudio.volume = 0.2; // Baja el volumen de la música de fondo
             audioMessage.play();
-            audioMessage.onended = function() {
-                backgroundAudio.volume = 1; // Restaura el volumen al finalizar el mensaje
+            audioMessage.onended = () => {
+                backgroundAudio.volume = 0.5;
             };
         }
 
+        document.getElementById('prevButton').addEventListener('click', prevContent);
+        document.getElementById('nextButton').addEventListener('click', nextContent);
+
+        showContent(currentIndex);
+    </script>
+</body>
+</html>
         document.getElementById('nextButton').onclick = nextItem;
         document.getElementById('prevButton').onclick = prevItem;
     </script>
