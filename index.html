@@ -36,6 +36,7 @@
             overflow: hidden;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
             z-index: 1;
+            display: none;
         }
         img, video {
             width: 100%;
@@ -70,15 +71,24 @@
             height: 40px;
             font-size: 1.5rem;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: none;
         }
         .nav-button.left {
             left: 10px;
         }
         .nav-button.right {
             right: 10px;
+        }
+        .play-button {
+            padding: 15px 30px;
+            font-size: 1.5rem;
+            background-color: #ff69b4;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 10px;
+            display: block;
         }
         .play-message-button {
             padding: 10px 20px;
@@ -105,13 +115,13 @@
         .heart-right { top: 50%; right: -30px; transform: translateY(-50%); }
         .heart-bottom-left { bottom: -30px; left: 10%; }
         .heart-bottom-right { bottom: -30px; right: 10%; }
-
     </style>
 </head>
 <body>
 
+    <button id="playButton" class="play-button" onclick="startGallery()">Play</button>
+
     <div class="heart-container">
-        <!-- Corazones decorativos -->
         <span class="heart heart-top-left">❤️</span>
         <span class="heart heart-top">❤️</span>
         <span class="heart heart-top-right">❤️</span>
@@ -120,7 +130,6 @@
         <span class="heart heart-bottom-left">❤️</span>
         <span class="heart heart-bottom-right">❤️</span>
         
-        <!-- Contenedor de la galería -->
         <div id="displayContainer" class="display-item">
             <p id="caption" class="caption"></p>
             <img id="displayImage" src="" alt="">
@@ -128,22 +137,17 @@
         </div>
     </div>
 
-    <!-- Botones de navegación en forma de corazón -->
     <button id="prevButton" class="nav-button left">❮</button>
     <button id="nextButton" class="nav-button right">❯</button>
+    <button id="playMessageButton" onclick="playAudioMessage()" class="play-message-button">Reproducir Mi Mensaje</button>
 
-    <!-- Botón para reproducir mensaje personalizado -->
-    <button id="playMessageButton" onclick="playAudio()" class="play-message-button">Reproducir Mi Mensaje</button>
-
-    <!-- Audio del mensaje personalizado -->
-    <audio id="audioMessage">
-        <source src="fotos/mensaje1.mp3" type="audio/mp3">
+    <audio id="backgroundAudio" loop>
+        <source src="fotos/audio_cancion.mp3" type="audio/mp3">
         Tu navegador no soporta el audio HTML5.
     </audio>
-
-    <!-- Audio de fondo que se reproduce automáticamente -->
-    <audio id="backgroundAudio" autoplay loop>
-        <source src="fotos/audio_cancion.mp3" type="audio/mp3">
+    
+    <audio id="audioMessage">
+        <source src="fotos/mensaje1.mp3" type="audio/mp3">
         Tu navegador no soporta el audio HTML5.
     </audio>
 
@@ -152,34 +156,25 @@
         const displayVideo = document.getElementById('displayVideo');
         const caption = document.getElementById('caption');
         const playMessageButton = document.getElementById('playMessageButton');
+        const playButton = document.getElementById('playButton');
+        const backgroundAudio = document.getElementById('backgroundAudio');
         
         const content = [
             { type: 'image', src: 'fotos/foto1.jpeg', caption: 'Hola mi amor ❤️' },
-            { type: 'image', src: 'fotos/foto2.jpeg', caption: 'Mi niña preciosa' },
-            { type: 'image', src: 'fotos/foto3.jpeg', caption: 'Sabes que me encantas?' },
-            { type: 'video', src: 'fotos/video1.mp4', caption: 'Hoy es un día muy importante...' },
-            { type: 'video', src: 'fotos/video2.mp4', caption: 'Es el cumpleaños de la niña más hermosa de este planeta 🥺' },
-            { type: 'image', src: 'fotos/foto4.jpeg', caption: 'Primeramente desearte un hermoso día, así cómo tú:' },
-            { type: 'image', src: 'fotos/foto5.jpeg', caption: 'Por segundo quiero hacerte acuerdo de lo importante que eres para mí' },
-            { type: 'image', src: 'fotos/foto6.jpeg', caption: 'Y de lo mucho que te amo ❤️' },
-            { type: 'video', src: 'fotos/video3.mp4', caption: 'Eres la persona con la que toda una vida quiero estar...' },
-            { type: 'video', src: 'fotos/video4.mp4', caption: 'Para mí eres perfecta en todo aspecto 🥺' },
-            { type: 'image', src: 'fotos/foto7.jpeg', caption: 'Quiero agradecerte por seguir estando conmigo a pesar de todo' },
-            { type: 'image', src: 'fotos/foto8.jpeg', caption: 'Créeme que yo nunca te dejaré sóla...' },
-            { type: 'image', src: 'fotos/foto9.jpeg', caption: 'Estaré para tí en las buenas y en las malas' },
-            { type: 'video', src: 'fotos/video5.mp4', caption: 'Caminaré contigo hasta el fin del mundo 🌍' },
-            { type: 'image', src: 'fotos/foto10.jpeg', caption: 'Y estaré pendiente para que nunca...' },
-            { type: 'image', src: 'fotos/foto11.jpeg', caption: 'NUNCAAAAA...' },
-            { type: 'image', src: 'fotos/foto12.jpeg', caption: 'PERO NUNCA NUNCA...' },
-            { type: 'image', src: 'fotos/foto13.jpeg', caption: 'NUNCA DE LOS JAMASESSS...' },
-            { type: 'image', src: 'fotos/foto14.jpeg', caption: '... NOS SOLTEMOS 🥺' },
-            { type: 'image', src: 'fotos/foto15.jpeg', caption: 'Estaré siempre contigo mi amor' },
-            { type: 'video', src: 'fotos/video6.mp4', caption: 'Y tú estarás siempre conmigo...' },
-            { type: 'image', src: 'fotos/foto16.jpeg', caption: 'CON MUCHO AMOR, TU GORDITO 🥺' },
-            { type: 'video', src: 'fotos/video7.mp4', caption: 'Psdt: Soy la tierra dando vueltas en mi sol 🥺' }
+            // Añade el resto de los elementos aquí
         ];
 
         let currentIndex = 0;
+
+        function startGallery() {
+            playButton.style.display = 'none';
+            backgroundAudio.volume = 0.5;
+            backgroundAudio.play();
+            document.getElementById('displayContainer').style.display = 'block';
+            document.getElementById('prevButton').style.display = 'flex';
+            document.getElementById('nextButton').style.display = 'flex';
+            showContent(currentIndex);
+        }
 
         function showContent(index) {
             displayImage.style.display = 'none';
@@ -188,8 +183,10 @@
             caption.textContent = '';
 
             if (index >= content.length) {
-                playMessageButton.style.display = 'inline-block';
+                playMessageButton.style.display = 'block';
                 return;
+            } else {
+                playMessageButton.style.display = 'none';
             }
 
             const item = content[index];
@@ -205,19 +202,27 @@
             }
         }
 
-        document.getElementById('prevButton').onclick = () => {
-            currentIndex = (currentIndex - 1 + content.length) % content.length;
+        function nextContent() {
+            currentIndex = (currentIndex + 1) % (content.length + 1);
             showContent(currentIndex);
-        };
-
-        document.getElementById('nextButton').onclick = () => {
-            currentIndex = (currentIndex + 1) % content.length;
-            showContent(currentIndex);
-        };
-
-        function playAudio() {
-            document.getElementById('audioMessage').play();
         }
+
+        function prevContent() {
+            currentIndex = (currentIndex - 1 + content.length + 1) % (content.length + 1);
+            showContent(currentIndex);
+        }
+
+        function playAudioMessage() {
+            backgroundAudio.volume = 0.1;
+            const audioMessage = document.getElementById('audioMessage');
+            audioMessage.play();
+            audioMessage.onended = () => {
+                backgroundAudio.volume = 0.5;
+            };
+        }
+
+        document.getElementById('prevButton').addEventListener('click', prevContent);
+        document.getElementById('nextButton').addEventListener('click', nextContent);
 
         showContent(currentIndex);
     </script>
