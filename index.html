@@ -17,6 +17,7 @@
             margin: 0;
             flex-direction: column;
             overflow: hidden;
+            position: relative;
         }
         .heart-container {
             position: relative;
@@ -74,10 +75,10 @@
             display: none;
         }
         .nav-button.left {
-            left: 50px;
+            left: calc(50% - 220px); /* Alineado justo al lado del elemento */
         }
         .nav-button.right {
-            right: 50px;
+            right: calc(50% - 220px); /* Alineado justo al lado del elemento */
         }
         .play-button {
             padding: 15px 30px;
@@ -107,6 +108,7 @@
             position: absolute;
             font-size: 1.5rem;
             color: #ff69b4;
+            display: none; /* Oculto por defecto */
         }
         .heart-top-left { top: -30px; left: 20%; }
         .heart-top { top: -30px; left: 50%; transform: translateX(-50%); }
@@ -158,6 +160,7 @@
         const playMessageButton = document.getElementById('playMessageButton');
         const playButton = document.getElementById('playButton');
         const backgroundAudio = document.getElementById('backgroundAudio');
+        const hearts = document.querySelectorAll('.heart');
         
         const content = [
             { type: 'image', src: 'fotos/foto1.jpeg', caption: 'Hola mi amor ❤️' },
@@ -184,7 +187,6 @@
             { type: 'image', src: 'fotos/foto16.jpeg', caption: 'CON MUCHO AMOR, TU GORDITO 🥺' },
             { type: 'video', src: 'fotos/video7.mp4', caption: 'Psdt: Soy la tierra dando vueltas en mi sol 🥺' }
         ];
-
         let currentIndex = 0;
 
         function startGallery() {
@@ -195,6 +197,7 @@
             document.getElementById('prevButton').style.display = 'flex';
             document.getElementById('nextButton').style.display = 'flex';
             showContent(currentIndex);
+            toggleHearts(true);
         }
 
         function showContent(index) {
@@ -205,9 +208,11 @@
 
             if (index >= content.length) {
                 playMessageButton.style.display = 'block';
+                toggleHearts(false); // Ocultar corazones al mostrar el botón de reproducir mensaje
                 return;
             } else {
                 playMessageButton.style.display = 'none';
+                toggleHearts(true); // Mostrar corazones para otros elementos
             }
 
             const item = content[index];
@@ -240,6 +245,13 @@
             audioMessage.onended = () => {
                 backgroundAudio.volume = 0.5;
             };
+            toggleHearts(false); // Ocultar corazones mientras se reproduce el mensaje
+        }
+
+        function toggleHearts(visible) {
+            hearts.forEach(heart => {
+                heart.style.display = visible ? 'block' : 'none';
+            });
         }
 
         document.getElementById('prevButton').addEventListener('click', prevContent);
