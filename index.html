@@ -1,31 +1,4 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Galería de WhatsApp Web</title>
-    <style>
-        body {
-            background-color: #ffccff;
-            font-family: Arial, sans-serif;
-            color: #000;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            flex-direction: column;
-            overflow: hidden;
-        }
-        .display-item {
-            position: relative;
-            width: 80%;
-            max-width: 400px;
-            max-height: 80vh;
-            margin: auto;
-            border-radius: …
-[10:50 p.m., 3/11/2024] kikesitopp: <!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -69,7 +42,7 @@
             height: 100%;
             object-fit: contain;
             border-radius: 10px;
-            display: none; /* Ocultar inicialmente */
+            display: none;
         }
         .caption {
             font-size: 1.2rem;
@@ -162,8 +135,15 @@
     <!-- Botón para reproducir mensaje personalizado -->
     <button id="playMessageButton" onclick="playAudio()" class="play-message-button">Reproducir Mi Mensaje</button>
 
+    <!-- Audio del mensaje personalizado -->
     <audio id="audioMessage">
         <source src="fotos/mensaje1.mp3" type="audio/mp3">
+        Tu navegador no soporta el audio HTML5.
+    </audio>
+
+    <!-- Audio de fondo que se reproduce automáticamente -->
+    <audio id="backgroundAudio" autoplay loop>
+        <source src="fotos/audio_cancion.mp3" type="audio/mp3">
         Tu navegador no soporta el audio HTML5.
     </audio>
 
@@ -208,10 +188,8 @@
             caption.textContent = '';
 
             if (index >= content.length) {
-                playMessageButton.style.display = 'block';
+                playMessageButton.style.display = 'inline-block';
                 return;
-            } else {
-                playMessageButton.style.display = 'none';
             }
 
             const item = content[index];
@@ -227,22 +205,19 @@
             }
         }
 
-        function nextContent() {
-            currentIndex = (currentIndex + 1) % (content.length + 1);
+        document.getElementById('prevButton').onclick = () => {
+            currentIndex = (currentIndex - 1 + content.length) % content.length;
             showContent(currentIndex);
-        }
+        };
 
-        function prevContent() {
-            currentIndex = (currentIndex - 1 + content.length + 1) % (content.length + 1);
+        document.getElementById('nextButton').onclick = () => {
+            currentIndex = (currentIndex + 1) % content.length;
             showContent(currentIndex);
-        }
+        };
 
         function playAudio() {
             document.getElementById('audioMessage').play();
         }
-
-        document.getElementById('prevButton').addEventListener('click', prevContent);
-        document.getElementById('nextButton').addEventListener('click', nextContent);
 
         showContent(currentIndex);
     </script>
